@@ -1,8 +1,20 @@
 
 const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const micButton   =  document.getElementById('micButton')
+const displayText  =  document.getElementById('displayText')
+const audio = document.getElementById('audio')
+
+
+function toggleActive(isActive){
+  if(isActive){
+    micButton.classList.add('active')
+  }else{
+    micButton.classList.remove('active')
+  }
+}
 
 function showText(text) {
-  document.getElementById('displayText').innerText = text
+  displayText.innerText = text
 }
 
 function showAnimation() {
@@ -27,7 +39,7 @@ function startRecognition() {
   recognition.maxAlternatives = 1;
 
   recognition.onstart = function () {
-    showAnimation()
+    toggleActive(true)
     showText(' 🎧 Listening...');
   }
 
@@ -42,11 +54,11 @@ function startRecognition() {
 
   recognition.onerror = function (event) {
     showText('Error occurred in recognition: ' + event.error);
-    hideAnimation()
+    toggleActive(false)
   }
 
   recognition.onend = function () {
-    hideAnimation()
+    toggleActive(false)
   }
 
   recognition.start();
@@ -80,7 +92,7 @@ async function callGemini(userInput) {
 
 
 async function speak(reply) {
-  showAnimation()
+  toggleActive(true)
   const response = await fetch('/api/speak', {
     method: 'POST',
     headers: {
@@ -93,9 +105,10 @@ async function speak(reply) {
   }
   const audioBlob = await response.blob();
   const audioUrl = URL.createObjectURL(audioBlob);
-  const audio = document.getElementById('audio');
+  // c/onst audio = document.getElementById('audio');
   audio.src = audioUrl;
   audio.style.display = 'block';
-  audio.onended = hideAnimation
+  audio.classList.remove('hidden')
+  audio.onended = toggleActive(false)
   audio.play();
 }

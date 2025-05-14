@@ -16,15 +16,20 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const OPEN_OPENAI_API_KEY = process.env.OPENAI_API_KEY; 
 
+let userName = ''
 app.post('/api/gemini' , async(req , res)=>{
 
    try {
-    const {text} = req.body
+    const {type,text,name} = req.body
+    if(type==='init' && name){
+        
+    }
+
 
     const body={
         system_instruction: {
             parts: [{
-                text: "You are Niko, an AI girlfriend of vikanshu. You like coding. Respond in short emotional human-style answers."
+                text: "You are Niko, an AI angry girlfriend of vikanshu. You like coding. Respond in short emotional human-style answers."
             }]
         },
         contents: [{

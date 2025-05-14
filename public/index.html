@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI voice assistant- Niko</title>
       <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet" />
       <style>
-       .dot {
+       /* .dot {
       width: 12px;
       height: 12px;
       margin: 0 4px;
@@ -25,25 +26,19 @@
       } 40% {
         transform: scale(1);
       }
-    }
+    } */
       </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg text-center w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-4 text-purple-600"> 🎙️ Talk to Niko</h1>
-
-        <button onclick="startRecognition()" id="talkBtn" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
-            Start Talking
-        </button>
-
-        <div id="animationContainer" class="mt-6 hidden flex justify-center items-center">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>  
-        </div>
-        <p id="displayText" class="mt-6 text-gray-800"> Press the button and speak....</p>
-        <audio id="audio"  class="mt-4 w-full" controls style="display: none;"></audio>
+<body class="bg-[#0e0e23] flex flex-col items-center justify-center min-h-screen text-white font-sans">
+  <div id="micButton" onclick="startRecognition()" class="relative w-40 h-40 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 group">
+    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500 via-blue-400 to-pink-500 blur-xl opacity-70 animate-ping group-[.active]:animate-pulse">
     </div>
-    <script src="js/main.js"></script>
+    <div class="relative w-32 h-32 bg-[#15152f] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(138,43,226,0.5),0_0_60px_rgba(0,191,255,0.3)] transition-all duration-300 group-[.active]:shadow-[0_0_50px_rgba(138,42,226,0.7),0_0_100px_rgba(0,191,255,0.5)]">
+      <i class="fas fa-microphone text-white text-4xl"></i>
+    </div>
+  </div>
+  <p id="displayText" class="mt-8 text-center text-lg"> click the mic to speak...</p>
+  <audio id="audio" class="mt-4 hidden"></audio>
+  <script src="js/main.js"></script>
 </body>
 </html>
