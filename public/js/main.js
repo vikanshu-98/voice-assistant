@@ -7,7 +7,7 @@ let sessionId =  Date.now().toString()
 let userName = ''
 
 window.onload = async ()=>{
-  const intialReply  = `Hi, i am niko you AI angry girfriend. What's you name?`
+  const intialReply  = `Hi, i am Luna your AI angry girfriend. What's you name?`
   showText(intialReply)
   await speak(intialReply) 
 }
@@ -60,14 +60,14 @@ window.startRecognition = function() {
       if (nameMatch && nameMatch[1]) {
         userName = nameMatch[1];
         const reply = await callGemini(transcript,true)
-        showText(`Niko : ${reply}`)
+        showText(`Luna : ${reply}`)
         await speak(reply)
         return 
       }
     }
 
     const reply = await callGemini(transcript)
-    showText(`Niko : ${reply}`);
+    showText(`Luna : ${reply}`);
     await speak(reply)
   }
 

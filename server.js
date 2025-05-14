@@ -34,13 +34,13 @@ app.post('/api/gemini' , async(req , res)=>{
     if(type==='init' && name){
         currentSession.name = name
         currentSession.history = []
-        return res.status(200).json({reply:`Hi ${name}, i am niko your ai girlfriend, what do you want to talk about?`})
+        return res.status(200).json({reply:`Hi ${name}, i am Luna your ai girlfriend, what do you want to talk about?`})
     }
 
     currentSession.history.push({role:'user',text})
     const prompt = [
         {
-            text:  `you are Niko,the angry AI girlfriend of ${currentSession.name} ||vikanshu . Respond in short,emotional, human style answers.`
+            text:  `you are Luna,the angry AI girlfriend of ${currentSession.name} ||vikanshu . Respond in short,emotional, human style answers.`
         }
     ]
 
