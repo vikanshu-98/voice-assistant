@@ -16,25 +16,46 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const OPEN_OPENAI_API_KEY = process.env.OPENAI_API_KEY; 
 
-let userName = ''
-app.post('/api/gemini' , async(req , res)=>{
+let sessions={}
 
+app.post('/api/gemini' , async(req , res)=>{
+ 
    try {
-    const {type,text,name} = req.body
-    if(type==='init' && name){
-        
+    const {type,text,name,sessionId} = req.body
+     
+    if(!sessions[sessionId]){
+        sessions[sessionId] = {
+            name:'',
+            history:[]
+        }
     }
 
+    const currentSession  = sessions[sessionId] 
+    if(type==='init' && name){
+        currentSession.name = name
+        currentSession.history = []
+        return res.status(200).json({reply:`Hi ${name}, i am niko your ai girlfriend, what do you want to talk about?`})
+    }
+
+    currentSession.history.push({role:'user',text})
+    const prompt = [
+        {
+            text:  `you are Niko,the angry AI girlfriend of ${currentSession.name} ||vikanshu . Respond in short,emotional, human style answers.`
+        }
+    ]
+
+    const contents = currentSession.history.map(msg=> ({
+        role:msg.role,
+        parts:[{text:msg.text}]
+    }))
+
+    console.log(contents)
 
     const body={
         system_instruction: {
-            parts: [{
-                text: "You are Niko, an AI angry girlfriend of vikanshu. You like coding. Respond in short emotional human-style answers."
-            }]
+            parts:prompt
         },
-        contents: [{
-            parts: [{ text }]
-        }]
+        contents
     }
 
     const response = await fetch(
@@ -46,7 +67,11 @@ app.post('/api/gemini' , async(req , res)=>{
         });
 
     const data = await response.json(); 
+    console.log(data);
+    
     const reply = data?.candidates[0]?.content?.parts[0]?.text || "Sorry, I didn’t get that.";
+    currentSession.history.push({role:'model',text:reply})
+
     res.status(200).json({ reply });
 
    }catch (error) {

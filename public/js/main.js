@@ -3,7 +3,14 @@ const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const micButton   =  document.getElementById('micButton')
 const displayText  =  document.getElementById('displayText')
 const audio = document.getElementById('audio')
+let sessionId =  Date.now().toString()
+let userName = ''
 
+window.onload = async ()=>{
+  const intialReply  = `Hi, i am niko you AI angry girfriend. What's you name?`
+  showText(intialReply)
+  await speak(intialReply) 
+}
 
 function toggleActive(isActive){
   if(isActive){
@@ -25,8 +32,7 @@ function hideAnimation() {
 }
 
 
-function startRecognition() {
-
+window.startRecognition = function() { 
   if (!speechRecognition) {
     showText('Speech recognition not supported in this browser.');
     return;
@@ -47,6 +53,19 @@ function startRecognition() {
     const transcript = event.results[0][0].transcript
     showText(`You said: ${transcript}`);
 
+
+
+    if (!userName) {
+      const nameMatch = transcript.match(/my name is ([a-zA-Z]+)/i);
+      if (nameMatch && nameMatch[1]) {
+        userName = nameMatch[1];
+        const reply = await callGemini(transcript,true)
+        showText(`Niko : ${reply}`)
+        await speak(reply)
+        return 
+      }
+    }
+
     const reply = await callGemini(transcript)
     showText(`Niko : ${reply}`);
     await speak(reply)
@@ -66,14 +85,31 @@ function startRecognition() {
 
 
 
-async function callGemini(userInput) {
+async function callGemini(userInput,isInit=false) {
   try {
+    if(userName && isInit){
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: userInput,type:'init',name:userName,sessionId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data.reply;
+    }
+    
     const response = await fetch('/api/gemini', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text: userInput })
+      body: JSON.stringify({ text: userInput,sessionId })
     });
 
     if (!response.ok) {
@@ -110,5 +146,9 @@ async function speak(reply) {
   audio.style.display = 'block';
   audio.classList.remove('hidden')
   audio.onended = toggleActive(false)
-  audio.play();
+  setTimeout(() => {
+    audio.play().catch(err => {
+      console.warn("Playback error:", err.message);
+    });
+  }, 100);
 }
