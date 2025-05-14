@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Assistant UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet" />
+  </head>
+  <body class="bg-[#0e0e23] flex flex-col items-center justify-center min-h-screen text-white font-sans">
+
+    <!-- Mic Button -->
+    <div
+      id="micButton"
+      onclick="startRecognition()"
+      class="relative w-40 h-40 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 group"
+    >
+      <!-- Outer Glowing Ring -->
+      <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500 via-blue-400 to-pink-500 blur-xl opacity-70 animate-ping group-[.active]:animate-pulse"></div>
+
+      <!-- Inner Circle -->
+      <div class="relative w-32 h-32 bg-[#15152f] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(138,43,226,0.5),0_0_60px_rgba(0,191,255,0.3)] transition-all duration-300 group-[.active]:shadow-[0_0_50px_rgba(138,43,226,0.7),0_0_100px_rgba(0,191,255,0.5)]">
+        <i class="fas fa-microphone text-white text-4xl"></i>
+      </div>
+    </div>
+
+    <!-- Display Text -->
+    <p id="displayText" class="mt-8 text-center text-lg">Click the mic to speak...</p>
+
+    <!-- Audio -->
+    <audio id="audio" class="mt-4 hidden" controls></audio>
+</body>
+</html>
